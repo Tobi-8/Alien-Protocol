@@ -89,6 +89,20 @@ impl OracleContract {
         storage::get_staleness_threshold(&env)
     }
 
+    pub fn set_staleness_threshold(env: Env, threshold: u64) {
+        let admin = match storage::get_admin(&env) {
+            Some(addr) => addr,
+            None => soroban_sdk::panic_with_error!(&env, OracleError::NotInitialized),
+        };
+        admin.require_auth();
+
+        assert!(threshold > 0, "threshold must be positive");
+
+        storage::set_staleness_threshold(&env, threshold);
+
+        events::StalenessThresholdUpdated { threshold }.publish(&env);
+    }
+
     pub fn set_admin(env: Env, new_admin: Address) {
         let current_admin = match storage::get_admin(&env) {
             Some(addr) => addr,

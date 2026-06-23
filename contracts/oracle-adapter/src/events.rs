@@ -14,3 +14,9 @@ pub struct PriceUpdated {
     pub price: i128,
     pub timestamp: u64,
 }
+
+#[contractevent]
+#[derive(Clone, Debug, PartialEq)]
+pub struct StalenessThresholdUpdated {
+    pub threshold: u64,
+}
